@@ -506,7 +506,7 @@ Readall <- Readall %>% unite(plate, c("PlateNumber", "temp", "Date"), remove = F
 ```
 
 
-patchwork
+
 
 ```{r}
 Readall <- filter(Readall, Size < 1500)
@@ -544,6 +544,16 @@ ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+
   coord_flip()+ 
   theme_cowplot(font_size = 12)
 ```
+```{r}
+ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+ 
+  geom_boxplot()+
+  facet_grid(~temp)+ 
+  coord_flip()+ 
+  theme_cowplot(font_size = 12)
+```
+
+
+
 
   
 ```{r}
