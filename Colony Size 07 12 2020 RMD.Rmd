@@ -266,7 +266,7 @@ Read_df <- read_delim("WT_ybeX_MOPS_ON_colonysize.csv",
 
 
 ```{r}
-Read_in3 <- read_delim("Data/WT_ybeX_MOPS_ON_colonysize3.csv", 
+Read_in3 <- read_delim("merge_data/WT_ybeX_MOPS_ON_colonysize3.csv", 
     ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
     trim_ws = TRUE)
 ```
@@ -451,14 +451,14 @@ write.csv(rbindybex2,"ybeX_MOPS_ON_colonysize2.csv", row.names = FALSE)
 
 
 ```{r}
-WTall <- read_delim("Data/WT_ybeX_MOPS_ON_colonysize3.csv", 
+WTall <- read_delim("merge_data/WT_ybeX_MOPS_ON_colonysize3.csv", 
     ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
     trim_ws = TRUE)
 ```
 
 
 ```{r}
-ybeX1 <- read_delim("Data/ybeX_MOPS_ON_colonysize1.csv", 
+ybeX1 <- read_delim("merge_data/ybeX_MOPS_ON_colonysize1.csv", 
     ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
     trim_ws = TRUE)
 ```
