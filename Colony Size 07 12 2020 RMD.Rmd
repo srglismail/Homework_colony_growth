@@ -506,9 +506,13 @@ Readall <- Readall %>% unite(plate, c("PlateNumber", "temp", "Date"), remove = F
 ```
 
 
+patchwork
+
 ```{r}
 Readall <- filter(Readall, Size < 1500)
-ggplot(Readall)+ geom_histogram(aes(Size, color=Strain), bins = 30)+
+ggplot(Readall)+ 
+  #geom_histogram(aes(Size, color=Strain), bins = 30)+
+  geom_density(mapping = aes(Size, color=Strain))+
   facet_grid(Date~temp)+
   theme_cowplot(font_size = 12)
 ```
@@ -521,6 +525,15 @@ ggsave(filename, plot = last_plot(),
   dpi = 300, limitsize = TRUE, bg = NULL,
   ...)
   
+
+```{r}
+Readall <- filter(Readall, Size < 1500)
+ggplot(Readall)+ 
+  geom_histogram(aes(Size, color=Strain), bins = 30)+
+  #geom_density(mapping = aes(Size, color=Strain))+
+  facet_grid(Date~temp)+
+  theme_cowplot(font_size = 12)
+```
 
 
 
