@@ -1,0 +1,529 @@
+---
+title: "Data visualisation of bacterial colony growth"
+author: "İsmail Sarıgül"
+date: "2021-09-23"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+library(here)
+library(readr)
+library(cowplot)
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+
+
+
+```{r}
+MOPS_WT1 <- read_csv("Data/BacteriaColonySegFullWT MOPS 37_42_1.csv")
+MOPS_WT2 <- read_csv("Data/BacteriaColonySegFullWT MOPS 37_42_2.csv")
+MOPS_WT3 <- read_csv("Data/BacteriaColonySegFullWT MOPS 37_42_3.csv")
+MOPS_WT4 <- read_csv("Data/BacteriaColonySegFullWT MOPS 37_42_4.csv")
+
+MOPS_ybeX1 <- read_csv("Data/BacteriaColonySegFullybeX MOPS 37_42_1.csv")
+MOPS_ybeX2 <- read_csv("Data/BacteriaColonySegFullybeX MOPS 37_42_2.csv")
+MOPS_ybeX3 <- read_csv("Data/BacteriaColonySegFullybeX MOPS 37_42_3.csv")
+MOPS_ybeX4 <- read_csv("Data/BacteriaColonySegFullybeX MOPS 37_42_4.csv")
+
+MOPS_WT1 <- distinct(MOPS_WT1, ExperimentNumber, ColonyID, .keep_all = TRUE)
+MOPS_WT2 <- distinct(MOPS_WT2, ExperimentNumber, ColonyID, .keep_all = TRUE)
+MOPS_WT3 <- distinct(MOPS_WT3, ExperimentNumber, ColonyID, .keep_all = TRUE)
+MOPS_WT4 <- distinct(MOPS_WT4, ExperimentNumber, ColonyID, .keep_all = TRUE)
+
+MOPS_ybeX1 <- distinct(MOPS_ybeX1, ExperimentNumber, ColonyID, .keep_all = TRUE)
+MOPS_ybeX2 <- distinct(MOPS_ybeX2, ExperimentNumber, ColonyID, .keep_all = TRUE)
+MOPS_ybeX3 <- distinct(MOPS_ybeX3, ExperimentNumber, ColonyID, .keep_all = TRUE)
+MOPS_ybeX4 <- distinct(MOPS_ybeX4, ExperimentNumber, ColonyID, .keep_all = TRUE)
+
+MOPS_WT1$ExperimentNumber <- as.character(MOPS_WT1$ExperimentNumber)
+MOPS_WT1<- rename(MOPS_WT1, Strain = ExperimentNumber )
+
+MOPS_WT2$ExperimentNumber <- as.character(MOPS_WT2$ExperimentNumber)
+MOPS_WT2<- rename(MOPS_WT2, Strain = ExperimentNumber )
+
+MOPS_WT3$ExperimentNumber <- as.character(MOPS_WT3$ExperimentNumber)
+MOPS_WT3<- rename(MOPS_WT3, Strain = ExperimentNumber )
+
+MOPS_WT4$ExperimentNumber <- as.character(MOPS_WT4$ExperimentNumber)
+MOPS_WT4<- rename(MOPS_WT4, Strain = ExperimentNumber )
+
+MOPS_ybeX1$ExperimentNumber <- as.character(MOPS_ybeX1$ExperimentNumber)
+MOPS_ybeX1<- rename(MOPS_ybeX1, Strain = ExperimentNumber )
+
+MOPS_ybeX2$ExperimentNumber <- as.character(MOPS_ybeX2$ExperimentNumber)
+MOPS_ybeX2<- rename(MOPS_ybeX2, Strain = ExperimentNumber )
+
+MOPS_ybeX3$ExperimentNumber <- as.character(MOPS_ybeX3$ExperimentNumber)
+MOPS_ybeX3<- rename(MOPS_ybeX3, Strain = ExperimentNumber )
+
+MOPS_ybeX4$ExperimentNumber <- as.character(MOPS_ybeX4$ExperimentNumber)
+MOPS_ybeX4<- rename(MOPS_ybeX4, Strain = ExperimentNumber )
+
+```
+
+
+
+
+```{r}
+
+
+AuSeg_WT1_test <- MOPS_WT2 %>% mutate(Strain = case_when(
+  Strain == "1" ~ "WT_37"))
+AuSeg_WT1_test$Ismail <- seq(1, 1106, by=1)
+AuSeg_WT1_test<- filter(AuSeg_WT1_test, Ismail < 168)
+PlateNumber <- c("1")
+AuSeg_WT1_test$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_WT1_test$Date <- Date
+AuSeg_WT1_test <- AuSeg_WT1_test %>% select(-Ismail)
+
+
+AuSeg_WT2_test <- MOPS_WT2 %>% mutate(Strain = case_when(
+  Strain == "2" ~ "WT_37"))
+AuSeg_WT2_test$Ismail <- seq(1, 1106, by=1)
+AuSeg_WT2_test<- filter(AuSeg_WT2_test, Ismail > 167)
+AuSeg_WT2_test<- filter(AuSeg_WT2_test, Ismail < 435)
+PlateNumber <- c("2")
+AuSeg_WT2_test$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_WT2_test$Date <- Date
+AuSeg_WT2_test <- AuSeg_WT2_test %>% select(-Ismail)
+
+
+AuSeg_WT3_test <- MOPS_WT2 %>% mutate(Strain = case_when(
+  Strain == "3" ~ "WT_37"))
+AuSeg_WT3_test$Ismail <- seq(1, 1106, by=1)
+AuSeg_WT3_test<- filter(AuSeg_WT3_test, Ismail > 434)
+AuSeg_WT3_test<- filter(AuSeg_WT3_test, Ismail < 664)
+PlateNumber <- c("3")
+AuSeg_WT3_test$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_WT3_test$Date <- Date
+AuSeg_WT3_test <- AuSeg_WT3_test %>% select(-Ismail)
+
+
+```
+
+
+
+```{r}
+
+AuSeg_WT4_test <- MOPS_WT2 %>% mutate(Strain = case_when(
+  Strain == "4" ~ "WT_42"))
+AuSeg_WT4_test$Ismail <- seq(1, 1106, by=1)
+AuSeg_WT4_test<- filter(AuSeg_WT4_test, Ismail > 663)
+AuSeg_WT4_test<- filter(AuSeg_WT4_test, Ismail < 961)
+PlateNumber <- c("1")
+AuSeg_WT4_test$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_WT4_test$Date <- Date
+AuSeg_WT4_test <- AuSeg_WT4_test %>% select(-Ismail)
+
+
+AuSeg_WT5_test <- MOPS_WT2 %>% mutate(Strain = case_when(
+  Strain == "5" ~ "WT_42"))
+AuSeg_WT5_test$Ismail <- seq(1, 1106, by=1)
+AuSeg_WT5_test<- filter(AuSeg_WT5_test, Ismail > 960)
+AuSeg_WT5_test<- filter(AuSeg_WT5_test, Ismail < 1059)
+PlateNumber <- c("2")
+AuSeg_WT5_test$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_WT5_test$Date <- Date
+AuSeg_WT5_test <- AuSeg_WT5_test %>% select(-Ismail)
+
+
+AuSeg_WT6_test <- MOPS_WT2 %>% mutate(Strain = case_when(
+  Strain == "6" ~ "WT_42"))
+AuSeg_WT6_test$Ismail <- seq(1, 1106, by=1)
+AuSeg_WT6_test<- filter(AuSeg_WT6_test, Ismail > 1058)
+PlateNumber <- c("3")
+AuSeg_WT6_test$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_WT6_test$Date <- Date
+AuSeg_WT6_test <- AuSeg_WT6_test %>% select(-Ismail)
+
+```
+
+
+
+```{r}
+
+AuSeg_WT7_test <- MOPS_WT3 %>% mutate(Strain = case_when(
+  Strain == "1" ~ "WT_37"))
+AuSeg_WT7_test$Ismail <- seq(1, 820, by=1)
+AuSeg_WT7_test<- filter(AuSeg_WT7_test, Ismail < 103)
+PlateNumber <- c("1")
+AuSeg_WT7_test$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_WT7_test$Date <- Date
+AuSeg_WT7_test <- AuSeg_WT7_test %>% select(-Ismail)
+
+
+AuSeg_WT8_test <- MOPS_WT3 %>% mutate(Strain = case_when(
+  Strain == "2" ~ "WT_37"))
+AuSeg_WT8_test$Ismail <- seq(1, 820, by=1)
+AuSeg_WT8_test<- filter(AuSeg_WT8_test, Ismail > 102)
+AuSeg_WT8_test<- filter(AuSeg_WT8_test, Ismail < 223)
+PlateNumber <- c("2")
+AuSeg_WT8_test$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_WT8_test$Date <- Date
+AuSeg_WT8_test <- AuSeg_WT8_test %>% select(-Ismail)
+
+
+AuSeg_WT9_test <- MOPS_WT3 %>% mutate(Strain = case_when(
+  Strain == "3" ~ "WT_37"))
+AuSeg_WT9_test$Ismail <- seq(1, 820, by=1)
+AuSeg_WT9_test<- filter(AuSeg_WT9_test, Ismail > 222)
+AuSeg_WT9_test<- filter(AuSeg_WT9_test, Ismail < 383)
+PlateNumber <- c("3")
+AuSeg_WT9_test$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_WT9_test$Date <- Date
+AuSeg_WT9_test <- AuSeg_WT9_test %>% select(-Ismail)
+
+```
+
+
+
+```{r}
+AuSeg_WT10_test <- MOPS_WT3 %>% mutate(Strain = case_when(
+  Strain == "4" ~ "WT_42"))
+AuSeg_WT10_test$Ismail <- seq(1, 820, by=1)
+AuSeg_WT10_test<- filter(AuSeg_WT10_test, Ismail > 382)
+AuSeg_WT10_test<- filter(AuSeg_WT10_test, Ismail < 576)
+PlateNumber <- c("1")
+AuSeg_WT10_test$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_WT10_test$Date <- Date
+AuSeg_WT10_test <- AuSeg_WT10_test %>% select(-Ismail)
+
+
+AuSeg_WT11_test <- MOPS_WT3 %>% mutate(Strain = case_when(
+  Strain == "5" ~ "WT_42"))
+AuSeg_WT11_test$Ismail <- seq(1, 820, by=1)
+AuSeg_WT11_test<- filter(AuSeg_WT11_test, Ismail > 575)
+AuSeg_WT11_test<- filter(AuSeg_WT11_test, Ismail < 685)
+PlateNumber <- c("2")
+AuSeg_WT11_test$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_WT11_test$Date <- Date
+AuSeg_WT11_test <- AuSeg_WT11_test %>% select(-Ismail)
+
+
+AuSeg_WT12_test <- MOPS_WT3 %>% mutate(Strain = case_when(
+  Strain == "6" ~ "WT_42"))
+AuSeg_WT12_test$Ismail <- seq(1, 820, by=1)
+AuSeg_WT12_test<- filter(AuSeg_WT12_test, Ismail > 684)
+PlateNumber <- c("3")
+AuSeg_WT12_test$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_WT12_test$Date <- Date
+AuSeg_WT12_test <- AuSeg_WT12_test %>% select(-Ismail)
+```
+
+
+
+
+```{r}
+
+rbind_2 <- rbind(AuSeg_WT1_test,AuSeg_WT2_test,
+                 AuSeg_WT3_test,AuSeg_WT4_test,
+                 AuSeg_WT5_test,AuSeg_WT6_test,
+                 AuSeg_WT7_test,AuSeg_WT8_test,
+                 AuSeg_WT9_test,AuSeg_WT10_test,
+                 AuSeg_WT11_test,AuSeg_WT12_test)
+
+```
+
+
+```{r}
+write.csv(rbind_2,"WT_ybeX_MOPS_ON_colonysize.csv", row.names = FALSE)
+```
+
+```{r}
+Read_df <- read_delim("WT_ybeX_MOPS_ON_colonysize.csv", 
+    ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
+    trim_ws = TRUE)
+```
+
+
+```{r}
+Read_in3 <- read_delim("Data/WT_ybeX_MOPS_ON_colonysize3.csv", 
+    ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
+    trim_ws = TRUE)
+```
+
+
+
+```{r}
+ggplot(Read_in3, aes(Radius, Strain))+ geom_violin()+
+  facet_grid(~Date)
+```
+
+
+
+```{r}
+
+AuSeg_ybeX1 <- MOPS_ybeX2 %>% mutate(Strain = case_when(
+  Strain == "1" ~ "ybeX_37"))
+AuSeg_ybeX1$Ismail <- seq(1, 1275, by=1)
+AuSeg_ybeX1<- filter(AuSeg_ybeX1, Ismail < 262)
+PlateNumber <- c("1")
+AuSeg_ybeX1$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_ybeX1$Date <- Date
+AuSeg_ybeX1 <- AuSeg_ybeX1 %>% select(-Ismail)
+
+AuSeg_ybeX2 <- MOPS_ybeX2 %>% mutate(Strain = case_when(
+  Strain == "2" ~ "ybeX_37"))
+AuSeg_ybeX2$Ismail <- seq(1, 1275, by=1)
+AuSeg_ybeX2<- filter(AuSeg_ybeX2, Ismail > 261)
+AuSeg_ybeX2<- filter(AuSeg_ybeX2, Ismail < 453)
+PlateNumber <- c("2")
+AuSeg_ybeX2$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_ybeX2$Date <- Date
+AuSeg_ybeX2 <- AuSeg_ybeX2 %>% select(-Ismail)
+
+AuSeg_ybeX3 <- MOPS_ybeX2 %>% mutate(Strain = case_when(
+  Strain == "3" ~ "ybeX_37"))
+AuSeg_ybeX3$Ismail <- seq(1, 1275, by=1)
+AuSeg_ybeX3<- filter(AuSeg_ybeX3, Ismail > 452)
+AuSeg_ybeX3<- filter(AuSeg_ybeX3, Ismail < 599)
+PlateNumber <- c("3")
+AuSeg_ybeX3$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_ybeX3$Date <- Date
+AuSeg_ybeX3 <- AuSeg_ybeX3 %>% select(-Ismail)
+
+
+```
+
+
+
+```{r}
+
+AuSeg_ybeX4 <- MOPS_ybeX2 %>% mutate(Strain = case_when(
+  Strain == "4" ~ "ybeX_42"))
+AuSeg_ybeX4$Ismail <- seq(1, 1275, by=1)
+AuSeg_ybeX4<- filter(AuSeg_ybeX4, Ismail > 598)
+AuSeg_ybeX4<- filter(AuSeg_ybeX4, Ismail < 798)
+PlateNumber <- c("1")
+AuSeg_ybeX4$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_ybeX4$Date <- Date
+AuSeg_ybeX4 <- AuSeg_ybeX4 %>% select(-Ismail)
+
+AuSeg_ybeX5 <- MOPS_ybeX2 %>% mutate(Strain = case_when(
+  Strain == "5" ~ "ybeX_42"))
+AuSeg_ybeX5$Ismail <- seq(1, 1275, by=1)
+AuSeg_ybeX5<- filter(AuSeg_ybeX5, Ismail > 797)
+AuSeg_ybeX5<- filter(AuSeg_ybeX5, Ismail < 986)
+PlateNumber <- c("2")
+AuSeg_ybeX5$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_ybeX5$Date <- Date
+AuSeg_ybeX5 <- AuSeg_ybeX5 %>% select(-Ismail)
+
+AuSeg_ybeX6 <- MOPS_ybeX2 %>% mutate(Strain = case_when(
+  Strain == "6" ~ "ybeX_42"))
+AuSeg_ybeX6$Ismail <- seq(1, 1275, by=1)
+AuSeg_ybeX6<- filter(AuSeg_ybeX6, Ismail > 985)
+PlateNumber <- c("3")
+AuSeg_ybeX6$PlateNumber <- PlateNumber
+Date <- c("G")
+AuSeg_ybeX6$Date <- Date
+AuSeg_ybeX6 <- AuSeg_ybeX6 %>% select(-Ismail)
+
+
+```
+
+
+```{r}
+which(grepl(6, MOPS_ybeX3$Strain))
+```
+
+```{r}
+
+AuSeg_ybeX7 <- MOPS_ybeX3 %>% mutate(Strain = case_when(
+  Strain == "1" ~ "ybeX_37"))
+AuSeg_ybeX7$Ismail <- seq(1, 682, by=1)
+AuSeg_ybeX7<- filter(AuSeg_ybeX7, Ismail < 151)
+PlateNumber <- c("1")
+AuSeg_ybeX7$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_ybeX7$Date <- Date
+AuSeg_ybeX7 <- AuSeg_ybeX7 %>% select(-Ismail)
+
+AuSeg_ybeX8 <- MOPS_ybeX3 %>% mutate(Strain = case_when(
+  Strain == "2" ~ "ybeX_37"))
+AuSeg_ybeX8$Ismail <- seq(1, 682, by=1)
+AuSeg_ybeX8<- filter(AuSeg_ybeX8, Ismail > 150)
+AuSeg_ybeX8<- filter(AuSeg_ybeX8, Ismail < 311)
+PlateNumber <- c("2")
+AuSeg_ybeX8$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_ybeX8$Date <- Date
+AuSeg_ybeX8 <- AuSeg_ybeX8 %>% select(-Ismail)
+
+AuSeg_ybeX9 <- MOPS_ybeX3 %>% mutate(Strain = case_when(
+  Strain == "3" ~ "ybeX_37"))
+AuSeg_ybeX9$Ismail <- seq(1, 682, by=1)
+AuSeg_ybeX9<- filter(AuSeg_ybeX9, Ismail > 310)
+AuSeg_ybeX9<- filter(AuSeg_ybeX9, Ismail < 410)
+PlateNumber <- c("3")
+AuSeg_ybeX9$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_ybeX9$Date <- Date
+AuSeg_ybeX9 <- AuSeg_ybeX9 %>% select(-Ismail)
+
+
+```
+
+
+
+
+
+```{r}
+AuSeg_ybeX10 <- MOPS_ybeX3 %>% mutate(Strain = case_when(
+  Strain == "4" ~ "ybeX_42"))
+AuSeg_ybeX10$Ismail <- seq(1, 682, by=1)
+AuSeg_ybeX10<- filter(AuSeg_ybeX10, Ismail > 409)
+AuSeg_ybeX10<- filter(AuSeg_ybeX10, Ismail < 537)
+PlateNumber <- c("1")
+AuSeg_ybeX10$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_ybeX10$Date <- Date
+AuSeg_ybeX10 <- AuSeg_ybeX10 %>% select(-Ismail)
+
+AuSeg_ybeX11 <- MOPS_ybeX3 %>% mutate(Strain = case_when(
+  Strain == "5" ~ "ybeX_42"))
+AuSeg_ybeX11$Ismail <- seq(1, 682, by=1)
+AuSeg_ybeX11<- filter(AuSeg_ybeX11, Ismail > 536)
+AuSeg_ybeX11<- filter(AuSeg_ybeX11, Ismail < 624)
+PlateNumber <- c("2")
+AuSeg_ybeX11$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_ybeX11$Date <- Date
+AuSeg_ybeX11 <- AuSeg_ybeX11 %>% select(-Ismail)
+
+AuSeg_ybeX12 <- MOPS_ybeX3 %>% mutate(Strain = case_when(
+  Strain == "6" ~ "ybeX_42"))
+AuSeg_ybeX12$Ismail <- seq(1, 682, by=1)
+AuSeg_ybeX12<- filter(AuSeg_ybeX12, Ismail > 623)
+PlateNumber <- c("3")
+AuSeg_ybeX12$PlateNumber <- PlateNumber
+Date <- c("H")
+AuSeg_ybeX12$Date <- Date
+AuSeg_ybeX12 <- AuSeg_ybeX12 %>% select(-Ismail)
+
+```
+
+
+```{r}
+rbindybex2 <- rbind(AuSeg_ybeX10,AuSeg_ybeX11,AuSeg_ybeX12,AuSeg_ybeX9,
+                    AuSeg_ybeX8,AuSeg_ybeX7,AuSeg_ybeX6,AuSeg_ybeX5,
+                    AuSeg_ybeX4,AuSeg_ybeX3,AuSeg_ybeX2,AuSeg_ybeX1)
+```
+
+
+```{r}
+write.csv(rbindybex2,"ybeX_MOPS_ON_colonysize2.csv", row.names = FALSE)
+```
+
+
+```{r}
+WTall <- read_delim("Data/WT_ybeX_MOPS_ON_colonysize3.csv", 
+    ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
+    trim_ws = TRUE)
+```
+
+
+```{r}
+ybeX1 <- read_delim("Data/ybeX_MOPS_ON_colonysize1.csv", 
+    ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
+    trim_ws = TRUE)
+```
+
+
+```{r}
+ybeX2 <- read_delim("ybeX_MOPS_ON_colonysize2.csv", 
+    ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
+    trim_ws = TRUE)
+```
+
+
+
+```{r}
+bindall <- rbind(WTall,ybeX1,ybeX2)
+```
+
+
+```{r}
+write.csv(bindall,"ybeX_WT_MOPS_ON_ColSize.csv", row.names = FALSE)
+
+```
+
+
+```{r}
+Readall <- read_delim("ybeX_WT_MOPS_ON_ColSize.csv", 
+    ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
+    trim_ws = TRUE)
+```
+
+
+```{r}
+Readall <- Readall %>% mutate(
+  temp = case_when(Strain %in% c("ybeX_37", "WT_37") ~ "37", 
+                   Strain %in% c("ybeX_42", "WT_42") ~ "42"),
+  Strain = case_when(Strain %in% c("ybeX_37", "ybeX_42") ~ "ybeX",
+                     Strain %in% c("WT_37", "WT_42") ~ "WT") )
+Readall <- Readall %>% unite(plate, c("PlateNumber", "temp", "Date"), remove = FALSE)
+
+```
+
+
+```{r}
+Readall <- filter(Readall, Size < 1500)
+ggplot(Readall)+ geom_histogram(aes(Size, color=Strain, bin=30))+
+  facet_grid(Date~temp)+
+  theme_cowplot(font_size = 12)
+```
+
+
+```{r}
+ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+ 
+  geom_violin()+
+  facet_grid(~temp)+ 
+  coord_flip()+ 
+  theme_cowplot(font_size = 12)
+```
+
+
+
+
+
+
+
+
+
+
+
