@@ -258,11 +258,11 @@ rbind_2 <- rbind(AuSeg_WT1_test,AuSeg_WT2_test,
 
 
 ```{r}
-write.csv(rbind_2,"WT_ybeX_MOPS_ON_colonysize.csv", row.names = FALSE)
+write.csv(rbind_2,"merge_data/WT_ybeX_MOPS_ON_colonysize.csv", row.names = FALSE)
 ```
 
 ```{r}
-Read_df <- read_delim("WT_ybeX_MOPS_ON_colonysize.csv", 
+Read_df <- read_delim("merge_data/WT_ybeX_MOPS_ON_colonysize.csv", 
     ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
     trim_ws = TRUE)
 ```
@@ -449,7 +449,7 @@ rbindybex2 <- rbind(AuSeg_ybeX10,AuSeg_ybeX11,AuSeg_ybeX12,AuSeg_ybeX9,
 
 
 ```{r}
-write.csv(rbindybex2,"ybeX_MOPS_ON_colonysize2.csv", row.names = FALSE)
+write.csv(rbindybex2,"merge_data/ybeX_MOPS_ON_colonysize2.csv", row.names = FALSE)
 ```
 
 
@@ -468,7 +468,7 @@ ybeX1 <- read_delim("merge_data/ybeX_MOPS_ON_colonysize1.csv",
 
 
 ```{r}
-ybeX2 <- read_delim("ybeX_MOPS_ON_colonysize2.csv", 
+ybeX2 <- read_delim("merge_data/ybeX_MOPS_ON_colonysize2.csv", 
     ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
     trim_ws = TRUE)
 ```
@@ -481,13 +481,13 @@ bindall <- rbind(WTall,ybeX1,ybeX2)
 
 
 ```{r}
-write.csv(bindall,"ybeX_WT_MOPS_ON_ColSize.csv", row.names = FALSE)
+write.csv(bindall,"merge_data/ybeX_WT_MOPS_ON_ColSize.csv", row.names = FALSE)
 
 ```
 
 
 ```{r}
-Readall <- read_delim("ybeX_WT_MOPS_ON_ColSize.csv", 
+Readall <- read_delim("merge_data/ybeX_WT_MOPS_ON_ColSize.csv", 
     ",", escape_double = FALSE, locale = locale(grouping_mark = ""), 
     trim_ws = TRUE)
 ```
@@ -544,6 +544,8 @@ ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+
   coord_flip()+ 
   theme_cowplot(font_size = 12)
 ```
+
+
 ```{r}
 ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+ 
   geom_boxplot()+
@@ -554,14 +556,9 @@ ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+
 
 
 
-
-  
-```{r}
-
 ggsave("histogram_violin_plot1.tiff", plot = last_plot(), 
        width = 5, height = 4)
 
-```
 
 
 
