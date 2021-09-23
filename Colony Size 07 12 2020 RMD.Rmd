@@ -1,8 +1,11 @@
 ---
 title: "Data visualisation of bacterial colony growth"
 author: "İsmail Sarıgül"
-date: "2021-09-23"
-output: html_notebook
+date: '2021-09-23'
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
@@ -490,6 +493,8 @@ Readall <- read_delim("ybeX_WT_MOPS_ON_ColSize.csv",
 ```
 
 
+
+
 ```{r}
 Readall <- Readall %>% mutate(
   temp = case_when(Strain %in% c("ybeX_37", "WT_37") ~ "37", 
@@ -503,10 +508,20 @@ Readall <- Readall %>% unite(plate, c("PlateNumber", "temp", "Date"), remove = F
 
 ```{r}
 Readall <- filter(Readall, Size < 1500)
-ggplot(Readall)+ geom_histogram(aes(Size, color=Strain, bin=30))+
+ggplot(Readall)+ geom_histogram(aes(Size, color=Strain), bins = 30)+
   facet_grid(Date~temp)+
   theme_cowplot(font_size = 12)
 ```
+For saving graphs in the working directory,
+
+ggsave(filename, plot = last_plot(),
+  device = NULL, path = NULL, scale = 1,
+  width = NA, height = NA,
+  units = c("in", "cm", "mm", "px"),
+  dpi = 300, limitsize = TRUE, bg = NULL,
+  ...)
+  
+
 
 
 ```{r}
@@ -517,7 +532,13 @@ ggplot(Readall, aes(Radius, Strain ,color=Strain, fill=Strain))+
   theme_cowplot(font_size = 12)
 ```
 
+  
+```{r}
 
+ggsave("histogram_violin_plot1.tiff", plot = last_plot(), 
+       width = 5, height = 4)
+
+```
 
 
 
